@@ -6,7 +6,7 @@
         <form action="" method="POST" class="mx-8 mb-6 bg-white rounded-lg w-1/2">
             <p class="text-4xl font-light px-8 py-6 text-center">{{ $title }}</p>
             @if ($errors->any())
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 roundedr">Invalid Data Input! Please try again.</div>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">Invalid Data Input! Please try again.</div>
             @endif
             <div class="px-6 py-3">
                 <p class="text-base font-medium text-zinc-700">Fullname</p>
@@ -24,9 +24,16 @@
             </div>
             <div class="px-6 pb-3">
                 <p class="text-base font-medium text-zinc-700">Position</p>
-                <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2">
-                    <option>Administrator</option>
-                    <option>Manager</option>
+                <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="group_id">
+                    <option value="1">Administrator</option>
+                    <option value="2">Manager</option>
+                </select>
+            </div>
+            <div class="px-6 pb-3">
+                <p class="text-base font-medium text-zinc-700">Position</p>
+                <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="state">
+                    <option value="0">Inactive</option>
+                    <option value="1">Active</option>
                 </select>
             </div>
             <div class="px-6 py-6 text-right">

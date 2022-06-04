@@ -6,6 +6,9 @@
         <p class="text-4xl font-light">{{ $title }}</p>
         <a href="{{ route('users.add') }}" class="ml-auto px-3 py-2 bg-blue-500 rounded-lg text-white h-full">Create new</a>
     </div>
+    @if (session('msg'))
+        <div class="bg-blue-200 border border-blue-400 text-black px-4 py-3 rounded">{{ session('msg') }}</div>
+    @endif
 
     <form action="" method="POST" class="mx-8 mb-6 bg-white rounded-lg">
         <div class="flex items-center gap-8 px-6 py-3">
@@ -46,20 +49,30 @@
                 </tr>
             </thead>
             <tbody>
+                @if (!empty($usersList))   
+                    @foreach($usersList as $key => $user)
+                        <tr>
+                            <td class="px-6 py-3">{{ $key + 1 }}</td>
+                            <td class="px-6 py-3">{{ $user->fullname}}</td>
+                            <td class="px-6 py-3">{{ $user->email}}</td>
+                            <td class="px-6 py-3">
+                                <p class="text-center font-medium w-28 py-0 bg-red-500 text-white rounded-md">{{ $user->position}}</p>
+                            </td>
+                            <td class="px-6 py-3">
+                                {!! $user->state == 0 ? 
+                                '<p class="text-center font-medium w-20 py-0 bg-zinc-400 text-white rounded-md">Inactive</p>' 
+                                : '<p class="text-center font-medium w-20 py-0 bg-teal-400 text-white rounded-md">Active</p>'!!}
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="{{ route('users.edit', 'id => $item->id') }}" class="px-3 py-2 bg-zinc-200 rounded-md">Quản lý</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
                 <tr>
-                    <td class="px-6 py-3">1</td>
-                    <td class="px-6 py-3">Hào Tommy</td>
-                    <td class="px-6 py-3">bnhao10062001@gmail.com</td>
-                    <td class="px-6 py-3">
-                        <p class="text-center font-medium w-20 py-0 bg-red-500 text-white rounded-md">Manager</p>
-                    </td>
-                    <td class="px-6 py-3">
-                        <p class="text-center font-medium w-20 py-0 bg-teal-400 text-white rounded-md">Active</p>
-                    </td>
-                    <td class="px-6 py-3 text-right">
-                        <button href="#" class="px-3 py-2 bg-zinc-200 rounded-md">Quản lý</button>
-                    </td>
+                    <td>No users</td>
                 </tr>
+                @endif
             </tbody>
         </table>
     </div>
