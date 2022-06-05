@@ -7,7 +7,7 @@
         <a href="{{ route('users.add') }}" class="ml-auto px-3 py-2 bg-blue-500 rounded-lg text-white h-full">Create new</a>
     </div>
     @if (session('msg'))
-        <div class="bg-blue-200 border border-blue-400 text-black px-4 py-3 rounded">{{ session('msg') }}</div>
+        <div class="bg-blue-200 border border-blue-400 text-black px-4 py-3 rounded my-3">{{ session('msg') }}</div>
     @endif
 
     <form action="" method="POST" class="mx-8 mb-6 bg-white rounded-lg">
@@ -64,7 +64,7 @@
                                 : '<p class="text-center font-medium w-20 py-0 bg-teal-400 text-white rounded-md">Active</p>'!!}
                             </td>
                             <td class="px-6 py-3 text-right">
-                                <a href="{{ route('users.edit', 'id => $item->id') }}" class="px-3 py-2 bg-zinc-200 rounded-md">Quản lý</a>
+                                <a href="{{ route('users.edit', ['id' => $user->id]) }}" class="px-3 py-2 bg-zinc-200 rounded-md">Quản lý</a>
                             </td>
                         </tr>
                     @endforeach

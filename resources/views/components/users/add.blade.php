@@ -25,15 +25,22 @@
             <div class="px-6 pb-3">
                 <p class="text-base font-medium text-zinc-700">Position</p>
                 <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="group_id">
-                    <option value="1">Administrator</option>
-                    <option value="2">Manager</option>
+                    <option>Select Group</option>
+                    @if (!empty($allGroups))
+                        @foreach ($allGroups as $group)
+                            <option value="{{ $group->id }}" {{old('group_id') == $group->id ? "selected" : false}}>{{ $group->position }}</option>
+                        @endforeach
+                    @endif  
                 </select>
+                @error('group_id')
+                    <span class="text-red-500 font-medium">{{ $message }}</span>
+                @enderror
             </div>
             <div class="px-6 pb-3">
                 <p class="text-base font-medium text-zinc-700">Position</p>
                 <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="state">
-                    <option value="0">Inactive</option>
-                    <option value="1">Active</option>
+                    <option value="0" {{ old('state') == 0 ? 'selected' : false}}>Inactive</option>
+                    <option value="1" {{ old('state') == 1 ? 'selected' : false}}>Active</option>
                 </select>
             </div>
             <div class="px-6 py-6 text-right">
