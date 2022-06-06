@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Validator;
+
 use App\Models\Users;
 use App\Models\Groups;
 use DB;
@@ -16,12 +19,74 @@ class UserController extends Controller
         $this->groups = new Groups();
     }
 
-    public function index() {
+    public function index(Request $request) {
         $title = 'List Users';
 
-        $usersList = $this->users->getUsers();
+        $filter = [];
 
-        return View('list-user', compact('title', 'usersList'));
+        $keywords = null;
+
+
+        // search state
+        if ($request->state) {
+            $state = $request->state;
+
+            
+            if ($state == 'active') {
+                $state = 1;
+            } else {
+                $state = 0;
+            }
+
+            $filter[] = [
+                'users.state', '=', $state
+            ];
+        }
+
+
+        // search groups
+        if ($request->group_id) {
+            $groupId = $request->group_id;
+
+            $filter[] = [
+                'users.group_id', '=', $groupId
+            ];
+        }
+
+        // search keywords
+        if ($request->keywords) {
+            $keywords = $request->keywords;
+
+        }
+
+        // Logic sort
+        $sortBy = $request->input('sort-by');
+        $sortType = $request->input('sort-type');
+
+        $allowSort = ['ASC', 'DESC'];
+
+        if (! empty($sortType) && in_array($sortType, $allowSort)) {
+            if ($sortType == 'ASC') {
+                $sortType = 'DESC';
+            } else {
+                $sortType = 'ASC';
+            }
+        } else {
+            $sortType = 'ASC';
+        }
+
+        $sortArr = [
+            'sortBy' => $sortBy,
+            'sortType' => $sortType
+        ];
+
+        
+
+        $usersList = $this->users->getUsers($filter, $keywords, $sortArr);
+        $allGroups = $this->groups->getGroups();
+
+
+        return View('list-user', compact('title', 'usersList', 'allGroups', 'sortType'));
     }
 
     public function add() {
@@ -46,34 +111,22 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('msg', 'Add user successfully!');
     }
 
-    public function getEdit(Request $request, $id = null) {
+    public function getUpdate(Request $request, $id = null) {
         $title = 'Edit Users';
 
-        if (! empty($id)) {
+        if ($id) {
             $users = $this->users->getDetails($id);
-            if (! empty($users)) {
-                $request->session()->put('id', $id);
-                $users = $users[0];
-            } else {
-                return redirect()->route('users.index')->with('msg', 'User does not exist!');
-            }
         } else {
             return redirect()->route('users.index')->with('msg', 'Users don\'t exist! Please select a new user!');
         }
 
         $allGroups = $this->groups->getGroups();
-        $idUser = $this->users->getID($id);
+        $user = $this->users->getUser($id);
 
-        return view('components.users.edit', compact('title', 'users', 'allGroups', 'idUser'));
+        return view('components.users.update', compact('title', 'users', 'allGroups', 'user'));
     }
 
-    public function update(UserRequest $request, $id = null) {
-        $id = session('id');
-
-        if (empty($id)) {
-            return back()->with('msg', 'User does not exist!');
-        }
-
+    public function update(UpdateUserRequest $request, $id = null) {
         $dataUpdate = [
             'fullname' => $request->fullname,
             'email' => $request->email,
@@ -89,7 +142,6 @@ class UserController extends Controller
     }
 
     public function delete($id = null) {
-
         if (! empty($id)) {
             $usersDetail = $this->users->getDetails($id);
             if (! empty($usersDetail)) {
