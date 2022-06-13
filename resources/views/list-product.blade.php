@@ -13,20 +13,20 @@
             <tr>
                 <td class="px-6 py-3">STT</td>
                 <td class="px-6 py-3 hover:text-red-500">
-                    <a>Name</a>
+                    <a>Name Product</a>
                     
                 </td>
                 <td class="px-6 py-3 hover:text-red-500">
-                    <a>email</a>
+                    <a>Amount of Product</a>
                 </td>
-                <td class="px-6 py-3"">Role</th>
+                <td class="px-6 py-3"">Category</th>
                 <td class="px-6 py-3">State</td>
                 <td class="px-6 py-3"></td>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="px-6 py-3"></td>
+                <td class="px-6 py-3">{{ $products->product_name }}</td>
                 <td class="px-6 py-3"></td>
                 <td class="px-6 py-3"></td>
                 <td class="px-6 py-3">
