@@ -10,8 +10,15 @@
             @endif
             <div class="px-6 py-3">
                 <p class="text-base font-medium text-zinc-700">Fullname</p>
-                <input type="text" name="fullname" class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Fullname...">
+                <input type="text" name="name" class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Fullname...">
                 @error('fullname')
+                    <span class="text-red-500 font-medium">{{ $message }}</span>
+                @enderror
+            </div>
+            <div class="px-6 py-3">
+                <p class="text-base font-medium text-zinc-700">Username</p>
+                <input type="text" name="username" class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Username...">
+                @error('username')
                     <span class="text-red-500 font-medium">{{ $message }}</span>
                 @enderror
             </div>
@@ -23,21 +30,21 @@
                 @enderror
             </div>
             <div class="px-6 pb-3">
-                <p class="text-base font-medium text-zinc-700">Position</p>
-                <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="group_id">
-                    <option>Select Group</option>
-                    @if (!empty($allGroups))
-                        @foreach ($allGroups as $group)
-                            <option value="{{ $group->id }}" {{old('group_id') == $group->id ? "selected" : false}}>{{ $group->position }}</option>
+                <p class="text-base font-medium text-zinc-700">Role</p>
+                <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="role_id">
+                    <option>Select Role</option>
+                    @if (!empty($allRoles))
+                        @foreach ($allRoles as $role)
+                            <option value="{{ $role->id }}" {{old('role_id') == $role->id ? "selected" : false}}>{{ $role->role }}</option>
                         @endforeach
                     @endif  
                 </select>
-                @error('group_id')
+                @error('role_id')
                     <span class="text-red-500 font-medium">{{ $message }}</span>
                 @enderror
             </div>
             <div class="px-6 pb-3">
-                <p class="text-base font-medium text-zinc-700">Position</p>
+                <p class="text-base font-medium text-zinc-700">Role</p>
                 <select class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" name="state">
                     <option value="0" {{ old('state') == 0 ? 'selected' : false}}>Inactive</option>
                     <option value="1" {{ old('state') == 1 ? 'selected' : false}}>Active</option>

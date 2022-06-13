@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use DB;
 
 class Users extends Model
 {
     use HasFactory;
 
-    public function getUsers($filter = [], $keywords = null, $sortByArr = null) {
+    public function getUsers($filter = [], $keywords = null, $sortByArr = null, $perPage = null) {
         $users = DB::table('users')
-        ->select('users.*', 'groups.position as position')
-        ->join('groups', 'users.group_id', '=', 'groups.id');
+        ->select('users.*', 'roles.role as role_name')
+        ->join('roles', 'users.role_id', '=', 'roles.id', 'left outer');
 
-        $orderBy = 'users.update_at';
+        $orderBy = 'users.updated_at';
         $ordertype = 'DESC';
 
         if (! empty($sortByArr) && is_array($sortByArr)) {
@@ -35,13 +35,19 @@ class Users extends Model
 
         if ($keywords) {
             $users = $users->where(function ($query) use ($keywords) {
-                $query->orWhere('fullname', 'like', '%'. $keywords .'%');
+                $query->orWhere('name', 'like', '%'. $keywords .'%');
                 $query->orWhere('email', 'like', '%'. $keywords .'%');
             });
         }
+ 
+        // $users = $users->get();
 
-        $users = $users->get();
-
+        if($perPage) {
+            $users = $users->paginate($perPage);
+        } else {
+            $users = $users->get();
+        }
+        
         return $users;      
     }
 

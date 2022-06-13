@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
+use App\Models\Users;
+use App\Models\Roles;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\Users;
-use App\Models\Groups;
-use DB;
-
 class UserController extends Controller
 {
+    const _PER_PAGE = 3;
+
     public function __construct() {
         $this->users = new Users();
-        $this->groups = new Groups();
+        $this->roles = new Roles();
     }
 
     public function index(Request $request) {
@@ -44,12 +47,12 @@ class UserController extends Controller
         }
 
 
-        // search groups
-        if ($request->group_id) {
-            $groupId = $request->group_id;
+        // search roles
+        if ($request->role_id) {
+            $roleId = $request->role_id;
 
             $filter[] = [
-                'users.group_id', '=', $groupId
+                'users.role_id', '=', $roleId
             ];
         }
 
@@ -82,28 +85,34 @@ class UserController extends Controller
 
         
 
-        $usersList = $this->users->getUsers($filter, $keywords, $sortArr);
-        $allGroups = $this->groups->getGroups();
+        $usersList = $this->users->getUsers($filter, $keywords, $sortArr, self::_PER_PAGE   );
+        $allRoles = $this->roles->getRoles();
 
 
-        return View('list-user', compact('title', 'usersList', 'allGroups', 'sortType'));
+        if (Auth::check()) {
+            return View('list-user', compact('title', 'usersList', 'allRoles', 'sortType'));
+        } else {
+            return 'Don\'t login';
+        }
     }
 
     public function add() {
         $title = 'Add Users';
 
-        $allGroups = $this->groups->getGroups();
+        $allRoles = $this->roles->getRoles();
 
-        return view('components.users.add', compact('title', 'allGroups'));
+        return view('components.users.add', compact('title', 'allRoles'));
     }
 
     public function postAdd(UserRequest $request) {
         $data = [
-            'fullname' => $request->fullname,
+            'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
-            'group_id' => $request->group_id,
+            'role_id' => $request->role_id,
             'state' => $request->state,
-            'update_at' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         $this->users->addUser($data);
@@ -120,19 +129,21 @@ class UserController extends Controller
             return redirect()->route('users.index')->with('msg', 'Users don\'t exist! Please select a new user!');
         }
 
-        $allGroups = $this->groups->getGroups();
+        $allRoles = $this->roles->getRoles();
         $user = $this->users->getUser($id);
 
-        return view('components.users.update', compact('title', 'users', 'allGroups', 'user'));
+        return view('components.users.update', compact('title', 'users', 'allRoles', 'user'));
     }
 
     public function update(UpdateUserRequest $request, $id = null) {
         $dataUpdate = [
-            'fullname' => $request->fullname,
+            'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
-            'group_id' => $request->group_id,
+            'role_id' => $request->role_id,
             'state' => $request->state,
-            'update_at' => date('Y-m-d H:i:s')
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
         ];
 
         $this->users->updateUser($dataUpdate, $id);

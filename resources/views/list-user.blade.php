@@ -19,14 +19,14 @@
                 class="form-control border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Key search ..."
                 value="{{ request()->keywords }}">
             </div>
-            {{-- Search Groups --}}
+            {{-- Search roles --}}
             <div class="w-[33.3333%]">
-                <p class="text-base font-medium text-zinc-700">Search for groups</p>
-                <select name="group_id" class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" value="{{ request()->group_id }}">
-                    <option value="0">All groups</option>   
-                    @if (! empty($allGroups)) 
-                        @foreach ($allGroups as $group)
-                            <option value="{{ $group->id }}" {{ request()->group_id == $group->id ? 'selected' : false }}>{{ $group->position }}</option>"
+                <p class="text-base font-medium text-zinc-700">Search for Role</p>
+                <select name="role_id" class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" value="{{ request()->role_id }}">
+                    <option value="0">All roles</option>   
+                    @if (! empty($allRoles)) 
+                        @foreach ($allRoles as $role)
+                            <option value="{{ $role->id }}" {{ request()->role_id == $role->id ? 'selected' : false }}>{{ $role->role }}</option>"
                         @endforeach
                     @endif
                 </select>
@@ -41,8 +41,9 @@
                 </select>
             </div>
         </div>
-        <div class="w-1/4 px-6 pb-3">
+        <div class="w-1/4 px-6 pb-3 flex items-center gap-3">
             <button type="submit" class="px-3 py-2 bg-blue-500 rounded-md text-white mt-4">Search now</button>
+            <a href="{{ route('users.index') }}" class="border border-zinc-300 px-3 py-2 rounded-md mt-4 hover:border-zinc-500 hover:bg-zinc-100">Reset Search</a>
         </div>
     </form>
 
@@ -52,13 +53,13 @@
                 <tr>
                     <td class="px-6 py-3">STT</td>
                     <td class="px-6 py-3 hover:text-red-500">
-                        <a href="?sort-by=fullname&sort-type={{ $sortType }}">Name</a>
+                        <a href="?sort-by=name&sort-type={{ $sortType }}">Name</a>
                         
                     </td>
                     <td class="px-6 py-3 hover:text-red-500">
                         <a href="?sort-by=email&sort-type={{ $sortType }}">email</a>
                     </td>
-                    <td class="px-6 py-3"">Group</th>
+                    <td class="px-6 py-3"">Role</th>
                     <td class="px-6 py-3">State</td>
                     <td class="px-6 py-3"></td>
                 </tr>
@@ -68,12 +69,17 @@
                     @foreach($usersList as $key => $user)
                         <tr>
                             <td class="px-6 py-3">{{ $key + 1 }}</td>
-                            <td class="px-6 py-3">{{ $user->fullname}}</td>
+                            <td class="px-6 py-3">{{ $user->name}}</td>
                             <td class="px-6 py-3">{{ $user->email}}</td>
                             <td class="px-6 py-3">
-                                {!! $user->group_id == 1 ? '<p class="text-center font-medium w-28 py-0 bg-red-500 text-white rounded-md"
-                                >Administrator</p>'
-                                : '<p class="text-center font-medium w-28 py-0 bg-green-600 text-white rounded-md">Manager</p>' !!}
+                        
+                                @if ($user->role_id == 2) 
+                                    {!! '<p class="text-center font-medium w-28 py-0 bg-red-500 text-white rounded-md">Administrator</p>' !!}
+                                @elseif ($user->role_id == 3)
+                                    {!! '<p class="text-center font-medium w-28 py-0 bg-green-600 text-white rounded-md">Manager</p>' !!}
+                                @else
+                                    {!! '<p class="text-center font-medium w-28 py-0 bg-blue-500 text-white rounded-md">User</p>' !!}
+                                @endif
                             </td>
                             <td class="px-6 py-3">
                                 {!! $user->state == 0 ? 
@@ -92,7 +98,13 @@
                 @endif
             </tbody>
         </table>
+
+        <div class="px-2 py-2">
+            {{ $usersList->links()  }}
+        </div>
     </div>
+
+
     
 
 

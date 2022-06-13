@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -26,4 +29,16 @@ Route::prefix('users')->name('users.')->group(function() {
     Route::post('/update/{id}', [UserController::class, 'update'])->name('post-update');
     Route::get('/delete/{id}', [UserController::class, 'delete'])->name('delete');
 
+});
+
+Route::prefix('auth')->name('auth.')->group(function() {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'userLogin'])->name('login-user');
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'create'])->name('create');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+Route::prefix('products')->name('products.')->group(function() {
+    Route::get('/', [ProductController::class, 'index'])->name('index');
 });
