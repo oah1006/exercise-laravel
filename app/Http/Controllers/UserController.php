@@ -85,14 +85,14 @@ class UserController extends Controller
 
         
 
-        $usersList = $this->users->getUsers($filter, $keywords, $sortArr, self::_PER_PAGE   );
+        $usersList = $this->users->getUsers($filter, $keywords, $sortArr, self::_PER_PAGE);
         $allRoles = $this->roles->getRoles();
 
 
         if (Auth::check()) {
             return View('list-user', compact('title', 'usersList', 'allRoles', 'sortType'));
         } else {
-            return 'Don\'t login';
+            return redirect()->route('auth.login');
         }
     }
 

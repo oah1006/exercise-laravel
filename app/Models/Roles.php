@@ -10,11 +10,7 @@ class Roles extends Model
 {
     use HasFactory;
 
-    public function getRoles() {
-        $roles = DB::table('roles')
-        ->orderBy('role', 'ASC')
-        ->get();
-
-        return $roles;
+    public function User() {
+        return $this->hasMany(User::class);
     }
 }

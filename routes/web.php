@@ -41,4 +41,10 @@ Route::prefix('auth')->name('auth.')->group(function() {
 
 Route::prefix('products')->name('products.')->group(function() {
     Route::get('/', [ProductController::class, 'index'])->name('index');
+    Route::get('/add', [ProductController::class, 'getAddProduct'])->name('show-add');
+    Route::post('/add', [ProductController::class, 'addProduct'])->name('add-product');
+    Route::get('/update/{id}', [ProductController::class, 'getUpdateProduct'])->name('show-update');
+    Route::post('/update/{id}', [ProductController::class, 'updateProduct'])->name('update-product');
+    Route::get('/delete/{id}', [ProductController::class, 'deleteProduct'])->name('delete-product');
+    Route::delete('/delete', [ProductController::class, 'deleteAllProduct'])->name('delete-all-product');
 });

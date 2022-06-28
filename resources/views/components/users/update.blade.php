@@ -35,7 +35,7 @@
             <div class="px-6 py-3">
                 <p class="text-base font-medium text-zinc-700">Username</p>
                 <input type="text" name="username" 
-                class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Username..." value="{{ old('name') ?? $user->name}}"/>
+                class="border border-zinc-300 w-full py-2 rounded-2xl px-4 mt-2" placeholder="Username..." value="{{ old('name') ?? $user->username}}"/>
                 @error('username')
                     <span class="text-red-500 font-medium">{{ $message }}</span>
                 @enderror
